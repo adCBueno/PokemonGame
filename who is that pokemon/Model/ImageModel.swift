@@ -8,5 +8,5 @@
 import Foundation
 
 struct ImageModel {
-    let imageUrl: String
+    let imageUR: String
 }

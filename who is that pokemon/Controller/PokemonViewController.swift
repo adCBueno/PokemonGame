@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 class PokemonViewController: UIViewController {
 
@@ -34,7 +35,16 @@ class PokemonViewController: UIViewController {
     
     
     @IBAction func buttonPressed(_ sender: UIButton) {
-        print(sender.title(for: .normal)!)
+        let userAnswer = sender.title(for: .normal)!
+        
+        if game.checkAnswer(userAnswer, correctAnswer) {
+            labelMessage.text = "Sí, es un \(userAnswer)"
+            labelScore.text = "Puntaje: \(game.score)"
+            
+            sender.layer.borderColor = UIColor.systemGreen.cgColor
+            sender.layer.borderWidth = 2
+            
+        }
     }
     
     func createButtons() {
@@ -64,7 +74,7 @@ class PokemonViewController: UIViewController {
 
 extension PokemonViewController: PokemonManagerDelegate {
     func didUpdatePokemon(pokemons: [PokemonModel]) {
-        random4Pokemons = pokemons.choose(n: 4)
+        random4Pokemons = pokemons.choose(4)
         
         let index = Int.random(in: 0...3)
         let imageData = random4Pokemons[index].imageURL
@@ -80,14 +90,23 @@ extension PokemonViewController: PokemonManagerDelegate {
 
 extension PokemonViewController: ImageManagerDelegate {
     func didUpdateImage(image: ImageModel) {
-        print(image.imageUrl)
+        correctAnswerImage = image.imageUR
+        
+        DispatchQueue.main.async { [self] in
+            let url = URL(string: image.imageUR)
+            let effect = ColorControlsProcessor(brightness: -1, contrast: 1, saturation: 1, inputEV: 0)
+            pokemonImage.kf.setImage(
+                with: url,
+                options: [
+                    .processor(effect)
+                ]
+            )
+        }
     }
     
     func didFailWithErrorImage(error: Error) {
-        
+        print(error)
     }
-    
-    
 }
 
 // Colecciones disponibvles en XCode, arrays, colecciones, etc. Vamos a iterar a travez de indices, los iteraremos
@@ -100,7 +119,7 @@ extension Collection where Indices.Iterator.Element == Index {
 
 // Para los aleatorios y cortar la cantidad que queremos, en este caso 4
 extension Collection {
-    func choose(n: Int) -> Array<Element> {
+    func choose(_ n: Int) -> Array<Element> {
         Array(shuffled().prefix(n))
     }
 }

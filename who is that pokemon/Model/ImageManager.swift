@@ -49,7 +49,7 @@ struct ImageManager {
             let decodeData = try decoder.decode(ImageData.self, from: imageData)
             let image = decodeData.sprites.other?.officialArtwork?.frontDefault ?? ""
             
-            return ImageModel(imageUrl: image)
+            return ImageModel(imageUR: image)
         } catch {
             return nil
         }
