@@ -6,3 +6,26 @@
 //
 
 import Foundation
+
+struct GameModel {
+    var score = 0
+    
+    // Check correct answer
+    mutating func checkAnswer(userAnswer: String, correctAnswer: String) -> Bool {
+        if userAnswer.lowercased() == correctAnswer.lowercased() {
+            score += 1
+            return true
+        }
+        return true
+    }
+    
+    // Get Score
+    func getScore() -> Int {
+        return score
+    }
+    
+    // Reset Score
+    mutating func setScore(score: Int) {
+        self.score = score
+    }
+}

@@ -8,8 +8,16 @@ class PokemonViewController: UIViewController {
     @IBOutlet var answerButtons: [UIButton]!
     
     lazy var pokemonManager = PokemonManager()
+    lazy var imageManager = ImageManager()
+    lazy var game = GameModel()
     
-    var random4Pokemons: [PokemonModel] = []
+    var random4Pokemons: [PokemonModel] = [] {
+        // Ejecuta una función luego de que la variable o lo que se debe obtener haya sido llenado
+        didSet {
+            setButtonsTittles()
+        }
+    }
+    
     var correctAnswer: String = ""
     var correctAnswerImage: String = ""
     
@@ -17,9 +25,11 @@ class PokemonViewController: UIViewController {
         super.viewDidLoad()
         // Seder control a partes del código
         pokemonManager.delegate = self
+        imageManager.delegate = self
         
         createButtons()
         pokemonManager.fetchPokemon()
+        labelMessage.text = " "
     }
     
     
@@ -37,6 +47,19 @@ class PokemonViewController: UIViewController {
             button.layer.cornerRadius = 10.0
         }
     }
+    
+    func setButtonsTittles() {
+        // Get our 4 random name items
+        for (index, button) in answerButtons.enumerated() {
+            // When working with delegates and modifying an interface we have to Dispatch so it will pass throught a queue
+            // Because we are waiting for the API's response
+            DispatchQueue.main.async { [self] in
+                button.setTitle(random4Pokemons[safe: index]?.name.capitalized, for: .normal)
+            }
+            
+        }
+            
+    }
 }
 
 extension PokemonViewController: PokemonManagerDelegate {
@@ -47,12 +70,24 @@ extension PokemonViewController: PokemonManagerDelegate {
         let imageData = random4Pokemons[index].imageURL
         correctAnswer = random4Pokemons[index].name
         
-        // imageManager.fetchImage(url: imageData)
+        imageManager.fetchImage(url: imageData)
     }
     
     func didFailWithError(error: Error) {
         print(error)
     }
+}
+
+extension PokemonViewController: ImageManagerDelegate {
+    func didUpdateImage(image: ImageModel) {
+        print(image.imageUrl)
+    }
+    
+    func didFailWithErrorImage(error: Error) {
+        
+    }
+    
+    
 }
 
 // Colecciones disponibvles en XCode, arrays, colecciones, etc. Vamos a iterar a travez de indices, los iteraremos

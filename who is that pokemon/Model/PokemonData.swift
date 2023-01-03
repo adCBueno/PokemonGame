@@ -9,10 +9,12 @@ import Foundation
 
 // Model of API para la entrada, lo que nos llegará
 
+// MARK: - PokemonData
 struct PokemonData: Codable {
-    let result: [Result]?
+    let results: [Result]?
 }
 
+// MARK: - Result
 struct Result: Codable {
     let name: String?
     let url: String?

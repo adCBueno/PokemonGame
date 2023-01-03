@@ -50,7 +50,7 @@ struct PokemonManager {
             let decodeData = try decoder.decode(PokemonData.self, from: pokemonData)
             
             // Aquí ya se consumen los datos de la API
-            let pokemon = decodeData.result?.map {
+            let pokemon = decodeData.results?.map {
                 // PokemonModel is how I wanna manage my information
                 PokemonModel(name: $0.name ?? "", imageURL: $0.url ?? "")
             }
