@@ -15,10 +15,11 @@ class PokemonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Seder control a partes del código
         pokemonManager.delegate = self
-        pokemonManager.fetchPokemon()
         
         createButtons()
+        pokemonManager.fetchPokemon()
     }
     
     
@@ -43,6 +44,10 @@ extension PokemonViewController: PokemonManagerDelegate {
         random4Pokemons = pokemons.choose(n: 4)
         
         let index = Int.random(in: 0...3)
+        let imageData = random4Pokemons[index].imageURL
+        correctAnswer = random4Pokemons[index].name
+        
+        // imageManager.fetchImage(url: imageData)
     }
     
     func didFailWithError(error: Error) {
@@ -58,6 +63,7 @@ extension Collection where Indices.Iterator.Element == Index {
     }
 }
 
+// Para los aleatorios y cortar la cantidad que queremos, en este caso 4
 extension Collection {
     func choose(n: Int) -> Array<Element> {
         Array(shuffled().prefix(n))
